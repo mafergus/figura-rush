@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,6 +14,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.phoenixunknownapps.figurarushextreme.highscores.ScoresAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by matthewferguson on 10/21/15.
@@ -21,7 +36,10 @@ public class HighScoreActivity extends Activity {
     private Button inviteButton;
     private int highScore = 0;
 
-    private Scores topScores;
+    private RecyclerView globalScores;
+    private RecyclerView.LayoutManager layoutManager;
+    private ScoresAdapter globalScoresAdapter;
+
     private Scores friendScores;
     private MyScoreItem myScore;
 
@@ -38,22 +56,88 @@ public class HighScoreActivity extends Activity {
             Log.v("MNF", "high score bundle is null!");
         }
 
+        globalScores = (RecyclerView)findViewById(R.id.globalScores);
+        layoutManager = new LinearLayoutManager(this);
+        globalScoresAdapter = new ScoresAdapter(this);
+        globalScores.setLayoutManager(layoutManager);
+        globalScores.setAdapter(globalScoresAdapter);
+
+        fetchGlobalTopScores();
+
         fetchFriendTopScores();
 
-        inviteButton = (Button) findViewById(R.id.inviteButton);
+        inviteButton = (Button)findViewById(R.id.inviteButton);
         inviteButton.setTypeface(((FiguraRushApplication) getApplicationContext()).getFontBold());
-        inviteButton.setOnClickListener(new View.OnClickListener() {
+        inviteButton.setOnClickListener(v -> {
+            String url = "https://play.google.com/store/apps/details?id=com.phoenixunknownapps.figurarushextreme";
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Bring it! Think you can beat my high score of " + highScore + " in Figura Rush?? " + url);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
+    }
+
+    private void fetchGlobalTopScores() {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference("high-scores");
+        database.orderByValue().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                String url = "https://play.google.com/store/apps/details?id=com.phoenixunknownapps.figurarushextreme";
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Bring it! Think you can beat my high score of " + highScore + " in Figura Rush?? " + url);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    HashMap<String, Long> scoreMap = (HashMap<String, Long>)dataSnapshot.getValue();
+                    List<ScoresAdapter.ScoreEntry> scores = new ArrayList<>();
+                    for (String key : scoreMap.keySet()) {
+                        scores.add(new ScoresAdapter.ScoreEntry(key, scoreMap.get(key)));
+                    }
+                    globalScoresAdapter.setScores(scores);
+                    int y = 0;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
+
+//    private void setTopFriendScores(final List<FriendsSingleton.FriendScorePair> fObjects) {
+//        List<FriendsSingleton.FriendScorePair> objects = removeDuplicates(fObjects);
+//        Log.v("MNF", "setTopFriendScores count: " + objects.size());
+//        if (objects.size() > 0) {
+//            Log.v("MNF", "setting first friend high score");
+//            ParseObject score = objects.get(0).friend;
+//            String contactName = objects.get(0).number;
+//            ParseObject player = (ParseObject) score.get("user");
+//            friendScores.getItem1().setLabel(contactName + "(" + player.getString("displayName") + ")");
+//            friendScores.getItem1().setScore(score.getInt("score"));
+//        }
+//        if (objects.size() > 1) {
+//            Log.v("MNF", "setting second friend high score");
+//            ParseObject score = objects.get(1).friend;
+//            String contactName = objects.get(1).number;
+//            ParseObject player = (ParseObject) score.get("user");
+//            friendScores.getItem2().setLabel(contactName + "(" + player.getString("displayName") + ")");
+//            friendScores.getItem2().setScore(score.getInt("score"));
+//        }
+//        if (objects.size() > 2) {
+//            Log.v("MNF", "setting third friend high score");
+//            ParseObject score = objects.get(2).friend;
+//            String contactName = objects.get(2).number;
+//            ParseObject player = (ParseObject) score.get("user");
+//            friendScores.getItem3().setLabel(contactName + "(" + player.getString("displayName") + ")");
+//            friendScores.getItem3().setScore(score.getInt("score"));
+//        }
+//        if (objects.size() > 3) {
+//            Log.v("MNF", "setting fourth friend high score");
+//            ParseObject score = objects.get(3).friend;
+//            String contactName = objects.get(3).number;
+//            ParseObject player = (ParseObject) score.get("user");
+//            friendScores.getItem4().setLabel(contactName + "(" + player.getString("displayName") + ")");
+//            friendScores.getItem4().setScore(score.getInt("score"));
+//        }
+//    }
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override

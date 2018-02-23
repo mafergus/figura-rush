@@ -8,6 +8,8 @@ import android.graphics.Typeface;
  */
 public class FiguraRushApplication extends Application {
 
+    private static final String TAG = FiguraRushApplication.class.getCanonicalName();
+
     public Typeface FONT_BOLD;
     public Typeface FONT_REGULAR;
 

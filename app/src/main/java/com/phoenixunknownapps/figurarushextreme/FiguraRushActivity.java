@@ -9,14 +9,21 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -26,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class FiguraRushActivity extends Activity {
+    private static final String TAG = FiguraRushActivity.class.getCanonicalName();
 
     private int highScore = 0;
 
@@ -264,6 +272,22 @@ public class FiguraRushActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Log.d(TAG, "signInAnonymously:success");
+            } else {
+                Log.w(TAG, "signInAnonymously:failure", task.getException());
+                Toast.makeText(FiguraRushActivity.this, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -300,32 +324,6 @@ public class FiguraRushActivity extends Activity {
     private void doParseLogin() {
 
         final String username = loadUserId();
-
-//        ParseUser.logInInBackground(username, "my pass", new LogInCallback() {
-//            @Override
-//            public void done(ParseUser user, ParseException e) {
-//                if (user != null) {
-//                    loginDone();
-//                } else {
-//                    final ParseUser user1 = new ParseUser();
-//                    user1.setUsername(username);
-//                    user1.setPassword("my pass");
-//                    user1.put("displayName", "Anonymous-" + Math.abs(new Random().nextInt()));
-//                    user1.signUpInBackground(new SignUpCallback() {
-//                        public void done(ParseException e) {
-//                            if (e == null) {
-//                                loginDone();
-//                            } else {
-//                                Toast.makeText(FiguraRushActivity.this, "Login Failed! " + e.getCode(), Toast.LENGTH_LONG).show();
-//                                Crashlytics.getInstance().core.setString("username", loadUserId());
-//                                Crashlytics.getInstance().core.setInt("loginErrorCode", e.getCode());
-//                                Crashlytics.getInstance().core.setString("loginErrorMessage", e.getMessage());
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        });
     }
 
     private void loginDone() {
@@ -334,66 +332,6 @@ public class FiguraRushActivity extends Activity {
 
     private String loadUserId() {
         return null;
-
-//        SharedPreferences prefs = getSharedPreferences("FiguraRushPrefs", MODE_PRIVATE);
-//        String userId = prefs.getString("userId", null);
-//        if (userId == null) {
-//            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-//            userId = tMgr.getLine1Number();
-//            if (userId == null || userId.equals("")) {
-//                promptPhoneNumber();
-//            } else {
-//                userId = cleanPhoneNumber(userId);
-//                SharedPreferences.Editor editor = prefs.edit();
-//                editor.putString("userId", userId);
-//                editor.commit();
-//            }
-//        }
-//        return userId;
-    }
-
-    private String cleanPhoneNumber(String number) {
-        return number.replace("+", "").replace("(", "").replace(")", "").replace(" ", "").replace("-", "");
-    }
-
-    private void promptPhoneNumber() {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View promptView = layoutInflater.inflate(R.layout.edit_display_name, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // set prompts.xml to be the layout file of the alertdialog builder
-        alertDialogBuilder.setView(promptView);
-        final EditText input = (EditText) promptView.findViewById(R.id.userInput);
-        input.setSelectAllOnFocus(true);
-        input.requestFocus();
-//         setup a dialog window
-//        alertDialogBuilder
-//                .setTitle("Enter Your Phone Number, with Country Code")
-//                .setMessage("We're going to find your friends!")
-//                .setCancelable(true)
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        String number = cleanPhoneNumber("" + input.getText());
-//                        ParseUser user = ParseUser.getCurrentUser();
-//                        if (user != null) {
-//                            ParseUser.getCurrentUser().put("username", number);
-//                            ParseUser.getCurrentUser().saveInBackground();
-//                        }
-//                    }
-//                })
-//                .setNegativeButton("Cancel",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                                SharedPreferences prefs = getSharedPreferences("FiguraRushPrefs", MODE_PRIVATE);
-//                                SharedPreferences.Editor editor = prefs.edit();
-//                                String userId = "" + Math.abs(new Random().nextInt());
-//                                editor.putString("userId", userId);
-//                                editor.commit();
-//                            }
-//                        });
-//        // create an alert dialog
-//        AlertDialog alertD = alertDialogBuilder.create();
-//        alertD.show();
     }
 
     public void loadHighScore() {
@@ -404,30 +342,25 @@ public class FiguraRushActivity extends Activity {
     public void saveHighScore() {
         writeScoreToFile("highScore.txt", "" + highScore);
 
-//        ParseUser user = ParseUser.getCurrentUser();
-//        if (user != null) {
-//            ParseQuery<ParseObject> highScoreQuery = ParseQuery.getQuery("HighScore");
-//            highScoreQuery.whereEqualTo("user", user);
-//            highScoreQuery.addDescendingOrder("score");
-//            highScoreQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-//                @Override
-//                public void done(ParseObject object, ParseException e) {
-//                    if (e == null) {
-//                        if (object != null) {
-//                            Log.v("MNF", "Got high score object from server, putting new high score " + highScore);
-//                            object.put("score", highScore);
-//                            object.saveInBackground();
-//                        } else {
-//                            Log.v("MNF", "No high score object, adding a new one for user " + ParseUser.getCurrentUser() + " score " + highScore);
-//                            ParseObject highScoreObject = new ParseObject("HighScore");
-//                            highScoreObject.put("score", highScore);
-//                            highScoreObject.put("user", ParseUser.getCurrentUser());
-//                            highScoreObject.saveInBackground();
-//                        }
-//                    }
-//                }
-//            });
-//        }
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("high-scores").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Long previousHighScore = (Long)dataSnapshot.getValue();
+                    if (highScore > previousHighScore) {
+                        database.child("high-scores").child(user.getUid()).setValue(highScore);
+                        database.child("users").child(user.getUid()).child("high-score").setValue(highScore);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void writeScoreToFile(String filename, String data) {
