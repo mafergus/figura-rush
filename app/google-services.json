@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "8099489087",
+    "firebase_url": "https://figura-rush.firebaseio.com",
+    "project_id": "figura-rush",
+    "storage_bucket": "figura-rush.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8099489087:android:8fb9fbf6ffd8ca27",
+        "android_client_info": {
+          "package_name": "com.phoenixunknownapps.figurarushextreme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8099489087-bbkl5ej3rgsrav250rr3nq0prkcnnqff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA49085gbr3xuxzw21HCCcSefa_QnZ-sgo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
