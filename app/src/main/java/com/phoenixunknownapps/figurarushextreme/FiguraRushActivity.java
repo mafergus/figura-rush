@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,6 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -28,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Random;
 
 public class FiguraRushActivity extends Activity {
 
@@ -338,21 +333,23 @@ public class FiguraRushActivity extends Activity {
     }
 
     private String loadUserId() {
-        SharedPreferences prefs = getSharedPreferences("FiguraRushPrefs", MODE_PRIVATE);
-        String userId = prefs.getString("userId", null);
-        if (userId == null) {
-            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            userId = tMgr.getLine1Number();
-            if (userId == null || userId.equals("")) {
-                promptPhoneNumber();
-            } else {
-                userId = cleanPhoneNumber(userId);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("userId", userId);
-                editor.commit();
-            }
-        }
-        return userId;
+        return null;
+
+//        SharedPreferences prefs = getSharedPreferences("FiguraRushPrefs", MODE_PRIVATE);
+//        String userId = prefs.getString("userId", null);
+//        if (userId == null) {
+//            TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//            userId = tMgr.getLine1Number();
+//            if (userId == null || userId.equals("")) {
+//                promptPhoneNumber();
+//            } else {
+//                userId = cleanPhoneNumber(userId);
+//                SharedPreferences.Editor editor = prefs.edit();
+//                editor.putString("userId", userId);
+//                editor.commit();
+//            }
+//        }
+//        return userId;
     }
 
     private String cleanPhoneNumber(String number) {
