@@ -1,0 +1,33 @@
+<resources>
+
+    <string name="app_name">Figura Rush</string>
+    <string name="score_label">Score:</string>
+    <string name="score_text">Score</string>
+    <string name="target_time">Target Time</string>
+    <string name="game_time_label">Time:</string>
+    <string name="streak">Streak</string>
+    <string name="streak_2">2 x Streak</string>
+    <string name="start">Start</string>
+    <string name="high_scores">High Scores</string>
+    <string name="play">Play</string>
+    <string name="practice">Practice</string>
+    <string name="random">Random</string>
+    <string name="circle">Circle</string>
+    <string name="triangle">Triangle</string>
+    <string name="square">Square</string>
+    <string name="moon">Moon</string>
+    <string name="heart">Heart</string>
+    <string name="star">Star</string>
+    <string name="clover">Clover</string>
+    <string name="invalid">Invalid</string>
+    <string name="level">Level %d</string>
+    <string name="level_passed">Level %d Complete!</string>
+    <string name="game_over">Game Over!</string>
+    <string name="global_label">Global:</string>
+    <string name="friends_label">Friends:</string>
+    <string name="inviate">Challenge!</string>
+    <string name="you">You:</string>
+    <string name="enter_display_name">Enter Display Name:</string>
+    <string name="share">Share!</string>
+
+</resources>

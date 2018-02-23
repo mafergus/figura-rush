@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundColor"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:padding="20dp">
+
+    <com.phoenixunknownapps.figurarushextreme.Scores
+        android:id="@+id/topScores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <com.phoenixunknownapps.figurarushextreme.Scores
+        android:id="@+id/friendScores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topScores"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/friendScores"
+        android:layout_alignLeft="@id/friendScores"
+        android:layout_alignRight="@id/friendScores"
+        android:layout_alignTop="@id/friendScores">
+
+        <ProgressBar
+            android:id="@+id/friendSpinner"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/youLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/friendScores"
+        android:layout_marginBottom="10dp"
+        android:text="@string/you"
+        android:textColor="@color/text_press_selector"
+        android:textSize="24sp" />
+
+    <com.phoenixunknownapps.figurarushextreme.MyScoreItem
+        android:id="@+id/myScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/youLabel" />
+
+    <Button
+        android:id="@+id/inviteButton"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button"
+        android:text="@string/inviate"
+        android:textSize="28sp" />
+</RelativeLayout>
