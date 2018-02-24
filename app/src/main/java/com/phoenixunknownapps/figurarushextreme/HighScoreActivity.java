@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.phoenixunknownapps.figurarushextreme.highscores.ScoresAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,8 +41,8 @@ public class HighScoreActivity extends Activity {
     private RecyclerView.LayoutManager layoutManager;
     private ScoresAdapter globalScoresAdapter;
 
+    private TextView userTopScore;
     private Scores friendScores;
-    private MyScoreItem myScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,13 @@ public class HighScoreActivity extends Activity {
         globalScores.setLayoutManager(layoutManager);
         globalScores.setAdapter(globalScoresAdapter);
 
+        userTopScore = (TextView)findViewById(R.id.userTopScore);
+
         fetchGlobalTopScores();
 
         fetchFriendTopScores();
+
+        fetchMyScore();
 
         inviteButton = (Button)findViewById(R.id.inviteButton);
         inviteButton.setTypeface(((FiguraRushApplication) getApplicationContext()).getFontBold());
@@ -79,7 +84,6 @@ public class HighScoreActivity extends Activity {
     }
 
     private void fetchGlobalTopScores() {
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference("high-scores");
         database.orderByValue().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -90,8 +94,8 @@ public class HighScoreActivity extends Activity {
                     for (String key : scoreMap.keySet()) {
                         scores.add(new ScoresAdapter.ScoreEntry(key, scoreMap.get(key)));
                     }
+                    Collections.sort(scores);
                     globalScoresAdapter.setScores(scores);
-                    int y = 0;
                 }
             }
 
@@ -102,42 +106,24 @@ public class HighScoreActivity extends Activity {
         });
     }
 
-//    private void setTopFriendScores(final List<FriendsSingleton.FriendScorePair> fObjects) {
-//        List<FriendsSingleton.FriendScorePair> objects = removeDuplicates(fObjects);
-//        Log.v("MNF", "setTopFriendScores count: " + objects.size());
-//        if (objects.size() > 0) {
-//            Log.v("MNF", "setting first friend high score");
-//            ParseObject score = objects.get(0).friend;
-//            String contactName = objects.get(0).number;
-//            ParseObject player = (ParseObject) score.get("user");
-//            friendScores.getItem1().setLabel(contactName + "(" + player.getString("displayName") + ")");
-//            friendScores.getItem1().setScore(score.getInt("score"));
-//        }
-//        if (objects.size() > 1) {
-//            Log.v("MNF", "setting second friend high score");
-//            ParseObject score = objects.get(1).friend;
-//            String contactName = objects.get(1).number;
-//            ParseObject player = (ParseObject) score.get("user");
-//            friendScores.getItem2().setLabel(contactName + "(" + player.getString("displayName") + ")");
-//            friendScores.getItem2().setScore(score.getInt("score"));
-//        }
-//        if (objects.size() > 2) {
-//            Log.v("MNF", "setting third friend high score");
-//            ParseObject score = objects.get(2).friend;
-//            String contactName = objects.get(2).number;
-//            ParseObject player = (ParseObject) score.get("user");
-//            friendScores.getItem3().setLabel(contactName + "(" + player.getString("displayName") + ")");
-//            friendScores.getItem3().setScore(score.getInt("score"));
-//        }
-//        if (objects.size() > 3) {
-//            Log.v("MNF", "setting fourth friend high score");
-//            ParseObject score = objects.get(3).friend;
-//            String contactName = objects.get(3).number;
-//            ParseObject player = (ParseObject) score.get("user");
-//            friendScores.getItem4().setLabel(contactName + "(" + player.getString("displayName") + ")");
-//            friendScores.getItem4().setScore(score.getInt("score"));
-//        }
-//    }
+    private void fetchMyScore() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("high-scores").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Long highScore = (Long)dataSnapshot.getValue();
+                    userTopScore.setText("" + highScore);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -157,9 +143,9 @@ public class HighScoreActivity extends Activity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                myScore.getLabel().setTextColor(getResources().getColor(R.color.DarkGreen));
+//                myScore.getLabel().setTextColor(getResources().getColor(R.color.DarkGreen));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                myScore.getLabel().setTextColor(getResources().getColor(R.color.Black));
+//                myScore.getLabel().setTextColor(getResources().getColor(R.color.Black));
                 showEditDisplayNamePopup();
             }
 
@@ -188,7 +174,7 @@ public class HighScoreActivity extends Activity {
                     public void onClick(DialogInterface dialog, int id) {
 //                        ParseUser.getCurrentUser().put("displayName", "" + input.getText());
 //                        ParseUser.getCurrentUser().saveInBackground();
-                        myScore.setLabel("" + input.getText());
+//                        myScore.setLabel("" + input.getText());
                     }
                 })
                 .setNegativeButton("Cancel",

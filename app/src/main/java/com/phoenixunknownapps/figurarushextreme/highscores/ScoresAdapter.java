@@ -1,12 +1,14 @@
 package com.phoenixunknownapps.figurarushextreme.highscores;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.phoenixunknownapps.figurarushextreme.R;
 
 import java.util.ArrayList;
@@ -21,13 +23,24 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
     final private Context context;
     final private List<ScoreEntry> scores = new ArrayList<>();
 
-    public static class ScoreEntry {
+    public static class ScoreEntry implements Comparable<ScoreEntry> {
         final public String user;
         final public Long score;
 
         public ScoreEntry(String user, Long score) {
             this.user = user;
             this.score = score;
+        }
+
+        @Override
+        public int compareTo(@NonNull ScoreEntry o) {
+            if (this.score > o.score) {
+                return -1;
+            } else if (this.score < o.score) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -60,17 +73,23 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        final private View rootView;
         final private TextView name;
         final private TextView score;
 
         ViewHolder(View v) {
             super(v);
+            this.rootView = v;
             this.name = (TextView)v.findViewById(R.id.label);
             this.score = (TextView)v.findViewById(R.id.score);
         }
 
         void populate(Context context,  ScoreEntry entry) {
-            this.name.setText(entry.user);
+            boolean isCurrentUser = entry.user.equals(FirebaseAuth.getInstance().getUid());
+            this.rootView.setBackgroundColor(isCurrentUser ?
+                    context.getResources().getColor(R.color.Aquamarine) :
+                    context.getResources().getColor(android.R.color.transparent));
+            this.name.setText(isCurrentUser ? "You" : entry.user);
             this.score.setText("" + entry.score);
         }
     }

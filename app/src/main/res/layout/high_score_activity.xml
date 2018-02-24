@@ -7,11 +7,19 @@
     android:focusableInTouchMode="false"
     android:padding="20dp">
 
+    <TextView
+        android:id="@+id/globalScoresTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Top Scores:" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/globalScores"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
+        android:layout_height="400dp"
+        android:layout_below="@+id/globalScoresTitle"
+        android:layout_marginTop="8dp" />
 
     <com.phoenixunknownapps.figurarushextreme.Scores
         android:id="@+id/friendScores"
@@ -34,26 +42,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="invisible"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/youLabel"
+    <RelativeLayout
+        android:id="@+id/userScoreContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/friendScores"
-        android:layout_marginBottom="10dp"
-        android:text="@string/you"
-        android:textColor="@color/text_press_selector"
-        android:textSize="24sp" />
+        android:layout_marginBottom="10dp">
 
-    <com.phoenixunknownapps.figurarushextreme.MyScoreItem
-        android:id="@+id/myScore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/youLabel" />
+        <TextView
+            android:id="@+id/youLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/you"
+            android:textColor="@color/text_press_selector"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/userTopScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/inviteButton"
