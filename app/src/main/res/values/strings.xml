@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">Figura Rush</string>
+    <string name="facebook_app_id">534323663607390</string>
+    <string name="fb_login_protocol_scheme">fb534323663607390</string>
     <string name="score_label">Score:</string>
     <string name="score_text">Score</string>
     <string name="target_time">Target Time</string>

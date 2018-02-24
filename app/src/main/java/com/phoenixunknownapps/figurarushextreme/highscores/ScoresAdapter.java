@@ -24,11 +24,13 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
     final private List<ScoreEntry> scores = new ArrayList<>();
 
     public static class ScoreEntry implements Comparable<ScoreEntry> {
-        final public String user;
+        final public String userId;
+        final public String displayName;
         final public Long score;
 
-        public ScoreEntry(String user, Long score) {
-            this.user = user;
+        public ScoreEntry(String displayName, String userId, Long score) {
+            this.displayName = displayName;
+            this.userId = userId;
             this.score = score;
         }
 
@@ -85,11 +87,11 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ViewHolder
         }
 
         void populate(Context context,  ScoreEntry entry) {
-            boolean isCurrentUser = entry.user.equals(FirebaseAuth.getInstance().getUid());
+            boolean isCurrentUser = entry.userId.equals(FirebaseAuth.getInstance().getUid());
             this.rootView.setBackgroundColor(isCurrentUser ?
                     context.getResources().getColor(R.color.Aquamarine) :
                     context.getResources().getColor(android.R.color.transparent));
-            this.name.setText(isCurrentUser ? "You" : entry.user);
+            this.name.setText(isCurrentUser ? "You" : entry.displayName);
             this.score.setText("" + entry.score);
         }
     }

@@ -89,13 +89,25 @@ public class HighScoreActivity extends Activity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    HashMap<String, Long> scoreMap = (HashMap<String, Long>)dataSnapshot.getValue();
+                    final HashMap<String, Long> scoreMap = (HashMap<String, Long>)dataSnapshot.getValue();
                     List<ScoresAdapter.ScoreEntry> scores = new ArrayList<>();
-                    for (String key : scoreMap.keySet()) {
-                        scores.add(new ScoresAdapter.ScoreEntry(key, scoreMap.get(key)));
+                    for (final String key : scoreMap.keySet()) {
+                        FirebaseDatabase.getInstance().getReference("users/" + key + "/displayName")
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String name = (String)dataSnapshot.getValue();
+                                        scores.add(new ScoresAdapter.ScoreEntry(name, key, scoreMap.get(key)));
+                                        if (scores.size() == scoreMap.size()) {
+                                            Collections.sort(scores);
+                                            globalScoresAdapter.setScores(scores);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {}
+                                });
                     }
-                    Collections.sort(scores);
-                    globalScoresAdapter.setScores(scores);
                 }
             }
 
@@ -108,8 +120,8 @@ public class HighScoreActivity extends Activity {
 
     private void fetchMyScore() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        database.child("high-scores").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+        database.child("highScore").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

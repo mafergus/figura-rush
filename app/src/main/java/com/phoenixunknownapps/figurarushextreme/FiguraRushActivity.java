@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +18,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.phoenixunknownapps.figurarushextreme.utils.TimestampUtils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -31,13 +45,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FiguraRushActivity extends Activity {
     private static final String TAG = FiguraRushActivity.class.getCanonicalName();
 
-    private int highScore = 0;
-
 //	private InterstitialAd interstitialAd;
+
+    private Long highScore = new Long(0);
 
     //	private ViewGroup rootView;
     private Button startButton;
@@ -66,11 +83,8 @@ public class FiguraRushActivity extends Activity {
 
         @Override
         public void onGameEnd(final long timeMs, final int score) {
-            Log.v("MNF", "onGameEnd score: " + score + " high score: " + highScore);
-            if (score > highScore) {
-                highScore = score;
-                saveHighScore();
-            }
+            Log.v("MNF", "onGameEnd score: " + score);
+            saveScore(new Long(score));
             gameEndedText.setText(FiguraRushActivity.this.getString(R.string.game_over));
 
             Animation.AnimationListener listener = new Animation.AnimationListener() {
@@ -123,8 +137,6 @@ public class FiguraRushActivity extends Activity {
         FONT_BOLD = ((FiguraRushApplication) getApplicationContext()).getFontBold();
 
         doParseLogin();
-
-        loadHighScore();
 
         gameEndedText = (TextView) findViewById(R.id.gameEndedTitle);
         gameEndedText.setTypeface(FONT_REGULAR);
@@ -225,7 +237,90 @@ public class FiguraRushActivity extends Activity {
         int level = prefs.getInt("level", 1);
 //        startButton.setText(getString(R.string.level, level));
 
+        initFb();
+    }
 
+    CallbackManager callbackManager;
+    private LoginButton loginButton;
+
+    private void initFb() {
+        final String EMAIL = "email";
+
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+        loginButton.setOnClickListener(click -> {
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        });
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+
+        boolean loggedIn = AccessToken.getCurrentAccessToken() != null;
+        if (loggedIn) {
+//            Intent mainActivity = new Intent(this, MainActivity.class);
+//            startActivity(mainActivity);
+        }
+
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        FirebaseAuth.getInstance().getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "linkWithCredential:success");
+                        FirebaseUser user = task.getResult().getUser();
+//                            updateUI(user);
+                    } else {
+                        Log.w(TAG, "linkWithCredential:failure", task.getException());
+                        Toast.makeText(FiguraRushActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        fbCreate(credential);
+                    }
+                });
+    }
+
+    private void fbCreate(AuthCredential credential) {
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(FiguraRushActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                        }
+                    }
+                });}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private class StartButtonClickListener implements OnClickListener {
@@ -279,6 +374,10 @@ public class FiguraRushActivity extends Activity {
             if (task.isSuccessful()) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.d(TAG, "signInAnonymously:success");
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("userLoginEvent");
+                Map<String, Object> updates = new HashMap<>();
+                updates.put(user.getUid(), TimestampUtils.getISO8601StringForCurrentDate());
+                ref.updateChildren(updates);
             } else {
                 Log.w(TAG, "signInAnonymously:failure", task.getException());
                 Toast.makeText(FiguraRushActivity.this, "Authentication failed.",
@@ -334,24 +433,25 @@ public class FiguraRushActivity extends Activity {
         return null;
     }
 
-    public void loadHighScore() {
-        String scoreString = readScoreFromFile("highScore.txt");
-        highScore = Integer.valueOf(scoreString.length() == 0 ? "0" : scoreString);
-    }
+//    public void loadHighScore() {
+//        String scoreString = readScoreFromFile("highScore.txt");
+//        highScore = Integer.valueOf(scoreString.length() == 0 ? "0" : scoreString);
+//    }
 
-    public void saveHighScore() {
-        writeScoreToFile("highScore.txt", "" + highScore);
+    public void saveScore(Long score) {
+//        writeScoreToFile("highScore.txt", "" + highScore);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        database.child("high-scores").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.child("users/" + user.getUid() + "/highScore").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Long previousHighScore = (Long)dataSnapshot.getValue();
-                    if (highScore > previousHighScore) {
-                        database.child("high-scores").child(user.getUid()).setValue(highScore);
-                        database.child("users").child(user.getUid()).child("high-score").setValue(highScore);
+                    if (score > previousHighScore) {
+                        highScore = score;
+                        database.child("high-scores").child(user.getUid()).setValue(score);
+                        database.child("users").child(user.getUid()).child("highScore").setValue(score);
                     }
                 }
             }
