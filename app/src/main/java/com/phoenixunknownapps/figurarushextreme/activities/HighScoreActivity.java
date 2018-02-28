@@ -1,4 +1,4 @@
-package com.phoenixunknownapps.figurarushextreme;
+package com.phoenixunknownapps.figurarushextreme.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.phoenixunknownapps.figurarushextreme.R;
 import com.phoenixunknownapps.figurarushextreme.highscores.ScoresAdapter;
 
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class HighScoreActivity extends Activity {
     private ScoresAdapter globalScoresAdapter;
 
     private TextView userTopScore;
-    private Scores friendScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +57,13 @@ public class HighScoreActivity extends Activity {
             Log.v("MNF", "high score bundle is null!");
         }
 
-        globalScores = (RecyclerView)findViewById(R.id.globalScores);
+        globalScores = findViewById(R.id.globalScores);
         layoutManager = new LinearLayoutManager(this);
         globalScoresAdapter = new ScoresAdapter(this);
         globalScores.setLayoutManager(layoutManager);
         globalScores.setAdapter(globalScoresAdapter);
 
-        userTopScore = (TextView)findViewById(R.id.userTopScore);
+        userTopScore = findViewById(R.id.userTopScore);
 
         fetchGlobalTopScores();
 
@@ -71,8 +71,7 @@ public class HighScoreActivity extends Activity {
 
         fetchMyScore();
 
-        inviteButton = (Button)findViewById(R.id.inviteButton);
-        inviteButton.setTypeface(((FiguraRushApplication) getApplicationContext()).getFontBold());
+        inviteButton = findViewById(R.id.inviteButton);
         inviteButton.setOnClickListener(v -> {
             String url = "https://play.google.com/store/apps/details?id=com.phoenixunknownapps.figurarushextreme";
             Intent sendIntent = new Intent();
@@ -112,9 +111,7 @@ public class HighScoreActivity extends Activity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -131,9 +128,7 @@ public class HighScoreActivity extends Activity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -166,9 +161,6 @@ public class HighScoreActivity extends Activity {
     };
 
     private void showEditDisplayNamePopup() {
-//        if (ParseUser.getCurrentUser() == null) {
-//            return;
-//        }
         LayoutInflater layoutInflater = LayoutInflater.from(HighScoreActivity.this);
         View promptView = layoutInflater.inflate(R.layout.edit_display_name, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

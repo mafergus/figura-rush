@@ -1,6 +1,6 @@
 package com.phoenixunknownapps.figurarushextreme;
 
-import com.phoenixunknownapps.figurarushextreme.GameBase.GestureType;
+import com.phoenixunknownapps.figurarushextreme.GameWindow.GestureType;
 
 import java.util.List;
 import java.util.Random;

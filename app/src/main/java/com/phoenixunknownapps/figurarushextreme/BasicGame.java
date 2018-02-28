@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 /**
  * Created by matthewferguson on 10/21/15.
  */
-public class BasicGame extends GameBase {
+public class BasicGame extends GameWindow {
 
     public BasicGame(Context context) {
         super(context);

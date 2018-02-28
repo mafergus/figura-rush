@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class PracticeGame extends GameBase {
+public class PracticeGame extends GameWindow {
 
 	private ImageView shapeImageView;
 	private Button pickShapeButton;
@@ -23,9 +23,9 @@ public class PracticeGame extends GameBase {
 	public PracticeGame(final Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
-		shapeImageView = (ImageView)findViewById(R.id.shapeImage);
+		shapeImageView = findViewById(R.id.shapeImage);
 		shapeImageView.setVisibility(VISIBLE);
-		pickShapeButton = (Button)findViewById(R.id.pickShapeButton);
+		pickShapeButton = findViewById(R.id.pickShapeButton);
 		pickShapeButton.setTypeface(fontRegular);
 		pickShapeButton.setOnClickListener(new View.OnClickListener() {
 

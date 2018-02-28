@@ -14,7 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.phoenixunknownapps.figurarushextreme.GameBase.GestureType;
+import com.phoenixunknownapps.figurarushextreme.GameWindow.GestureType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class SelectShapePopupWindow extends PopupWindow {
 			}
 		});
 
-		fontRegular = Typeface.createFromAsset(context.getAssets(), "JosefinSans-Regular.ttf");
+		fontRegular = Typeface.createFromAsset(context.getAssets(), "font/josefinsans_regular.ttf");
 
 		setBackgroundDrawable(new BitmapDrawable());
 		setOutsideTouchable(true);
@@ -64,7 +64,7 @@ public class SelectShapePopupWindow extends PopupWindow {
 
 	private class SelectShapeListAdapter extends BaseAdapter {
 		final Context context;
-		private List<GestureType> values = new ArrayList<GestureType>(GameBase.ALL_SHAPES);
+		private List<GestureType> values = new ArrayList<GestureType>(GameWindow.ALL_SHAPES);
 
 		public SelectShapeListAdapter(Context context) {
 			this.context = context;

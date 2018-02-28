@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 /**
  * Created by matthewferguson on 10/26/15.
  */
-public class TargetGame extends GameBase {
+public class TargetGame extends GameWindow {
 
     private long targetTime = 0l;
 

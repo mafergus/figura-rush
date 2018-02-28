@@ -21,37 +21,30 @@
         android:layout_below="@+id/globalScoresTitle"
         android:layout_marginTop="8dp" />
 
-    <com.phoenixunknownapps.figurarushextreme.Scores
-        android:id="@+id/friendScores"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/globalScores"
-        android:visibility="invisible" />
+    <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@id/friendScores"-->
+        <!--android:layout_alignLeft="@id/friendScores"-->
+        <!--android:layout_alignRight="@id/friendScores"-->
+        <!--android:layout_alignTop="@id/friendScores">-->
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/friendScores"
-        android:layout_alignLeft="@id/friendScores"
-        android:layout_alignRight="@id/friendScores"
-        android:layout_alignTop="@id/friendScores">
+        <!--<ProgressBar-->
+            <!--android:id="@+id/friendSpinner"-->
+            <!--style="@android:style/Widget.Holo.ProgressBar.Large"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:indeterminate="true"-->
+            <!--android:visibility="invisible" />-->
 
-        <ProgressBar
-            android:id="@+id/friendSpinner"
-            style="@android:style/Widget.Holo.ProgressBar.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminate="true"
-            android:visibility="invisible" />
-
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/userScoreContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friendScores"
+        android:layout_below="@id/globalScores"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -79,6 +72,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button"
+        android:fontFamily="@font/josefinsansbold"
         android:text="@string/inviate"
         android:textSize="28sp" />
 </RelativeLayout>

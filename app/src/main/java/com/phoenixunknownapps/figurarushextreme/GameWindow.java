@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GameBase extends RelativeLayout implements IGame, OnGesturePerformedListener {
+public class GameWindow extends RelativeLayout implements IGame, OnGesturePerformedListener {
     protected static final int ANIMATION_DURATION = 300;
     protected static final int START_TIME_MS = 10000;
     protected static final int ANIM_FADE_OUT_MS_200 = 200;
@@ -44,7 +44,6 @@ public class GameBase extends RelativeLayout implements IGame, OnGesturePerforme
     final protected List<GestureType> level4Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART);
     final protected List<GestureType> level5Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART, GestureType.STAR);
     final protected List<GestureType> level6Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART, GestureType.STAR, GestureType.CLOVER);
-    ;
 
     protected List<Level> levels = new ArrayList<Level>();
     protected Level currentLevel;
@@ -109,46 +108,44 @@ public class GameBase extends RelativeLayout implements IGame, OnGesturePerforme
         }
     }
 
-    ;
 
-
-    public GameBase(Context context) {
+    public GameWindow(Context context) {
         this(context, null);
     }
 
-    public GameBase(Context context, AttributeSet attrs) {
+    public GameWindow(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public GameBase(Context context, AttributeSet attrs, int defStyle) {
+    public GameWindow(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         LayoutInflater.from(context).inflate(getLayoutResId(), this);
 
-        fontBold = Typeface.createFromAsset(context.getAssets(), "JosefinSans-Bold.ttf");
-        fontRegular = Typeface.createFromAsset(context.getAssets(), "JosefinSans-Regular.ttf");
+        fontBold = Typeface.createFromAsset(context.getAssets(), "josefinsans_bold.ttf");
+        fontRegular = Typeface.createFromAsset(context.getAssets(), "josefinsans_regular.ttf");
 
-        rootView = (View) findViewById(R.id.rootView);
-        gestureOverlayView = (GestureOverlayView) findViewById(R.id.gestureOverlay);
+        rootView = findViewById(R.id.rootView);
+        gestureOverlayView = findViewById(R.id.gestureOverlay);
         gestureOverlayView.addOnGesturePerformedListener(this);
         gestureLib = GestureLibraries.fromRawResource(context, R.raw.gestures);
         if (!gestureLib.load()) {
             //			finish();
         }
 
-        scoreLabelTv = (TextView) findViewById(R.id.trainMagicScoreLabel);
+        scoreLabelTv = findViewById(R.id.trainMagicScoreLabel);
         scoreLabelTv.setTypeface(fontRegular);
-        scoreTv = (TextView) findViewById(R.id.trainMagicScore);
+        scoreTv = findViewById(R.id.trainMagicScore);
         scoreTv.setTypeface(fontRegular);
-        targetScoreTv = (TextView) findViewById(R.id.targetScore);
+        targetScoreTv = findViewById(R.id.targetScore);
         targetScoreTv.setTypeface(fontRegular);
-        TextView slash = (TextView) findViewById(R.id.slash);
+        TextView slash = findViewById(R.id.slash);
         slash.setTypeface(fontRegular);
-        drawShapeText = (TextView) findViewById(R.id.trainMagicShapeText);
+        drawShapeText = findViewById(R.id.trainMagicShapeText);
         drawShapeText.setTypeface(fontRegular);
-        background = (ImageView) findViewById(R.id.trainMagicBackground);
+        background = findViewById(R.id.trainMagicBackground);
 
-        timerCounterTextView = (TimerCounterTextView) findViewById(R.id.timerCounter);
+        timerCounterTextView = findViewById(R.id.timerCounter);
         timerCounterTextView.init(50, START_TIME_MS, new TimerCounterTextView.Callback() {
 
             @Override
@@ -163,10 +160,10 @@ public class GameBase extends RelativeLayout implements IGame, OnGesturePerforme
         });
         timerCounterTextView.setTypeface(fontBold);
         timerCounterTextView.setTextSize(48f);
-        timeBonusText = (TextView) findViewById(R.id.timeBonusText);
+        timeBonusText = findViewById(R.id.timeBonusText);
         timeBonusText.setTypeface(fontBold);
-        scoreContainer = (RelativeLayout) findViewById(R.id.trainMagicScoreContainer);
-        figuraRushProgressBar = (FiguraRushProgressBar) findViewById(R.id.figuraRushProgressBar);
+        scoreContainer = findViewById(R.id.trainMagicScoreContainer);
+        figuraRushProgressBar = findViewById(R.id.figuraRushProgressBar);
         figuraRushProgressBar.setProgress(100);
 
         loadLevels();
@@ -203,8 +200,7 @@ public class GameBase extends RelativeLayout implements IGame, OnGesturePerforme
         Log.v("MNF", "startGame level: " + level);
         gameStartAnim(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -212,8 +208,7 @@ public class GameBase extends RelativeLayout implements IGame, OnGesturePerforme
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 

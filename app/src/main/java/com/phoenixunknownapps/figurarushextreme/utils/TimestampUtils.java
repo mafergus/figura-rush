@@ -40,4 +40,23 @@ public class TimestampUtils {
      */
     private TimestampUtils() {
     }
+
+    public static String timeToString(long totalRunTimeMs) {
+        int hours = (int) (totalRunTimeMs / (1000 * 60 * 60));
+        totalRunTimeMs -= (hours * 1000 * 60 * 60);
+        int minutes = (int) (totalRunTimeMs / (1000 * 60));
+        totalRunTimeMs -= (minutes * 1000 * 60);
+        int seconds = (int) (totalRunTimeMs / 1000);
+        totalRunTimeMs -= (seconds * 1000);
+        int miliseconds = (int) (totalRunTimeMs);
+
+        String hoursStr = "" + (hours == 0 ? "" : hours);
+        String minutesStr = "" + (minutes == 0 ? "" : String.format("%02d", minutes));
+        String secondsStr = String.format("%02d", seconds);
+        String milisecondsStr = String.format("%2d", miliseconds / 10);
+
+        String text = hoursStr + (hours != 0 ? ":" : "") + minutesStr + (minutes != 0 ? ":" : "") + secondsStr + "." + milisecondsStr;
+
+        return text;
+    }
 }

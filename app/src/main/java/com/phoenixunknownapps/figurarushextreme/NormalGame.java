@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 /**
  * Created by matthewferguson on 10/26/15.
  */
-public class NormalGame extends GameBase {
+public class NormalGame extends GameWindow {
     protected int targetScore = Integer.MAX_VALUE;
 
     public NormalGame(Context context) {

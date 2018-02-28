@@ -24,8 +24,8 @@ public class FiguraRushApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        FONT_BOLD = Typeface.createFromAsset(getAssets(), "JosefinSans-Bold.ttf");
-        FONT_REGULAR = Typeface.createFromAsset(getAssets(), "JosefinSans-Regular.ttf");
+        FONT_BOLD = Typeface.createFromAsset(getAssets(), "josefinsans_bold.ttf");
+        FONT_REGULAR = Typeface.createFromAsset(getAssets(), "josefinsans_regular.ttf");
     }
 
     public Typeface getFontRegular() {

@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,7 +26,7 @@ public class GameTimer extends RelativeLayout {
 
 	private Callback callback;
 	public interface Callback {
-		public void onEnded(long totalRunTimeMs);
+		void onEnded(long totalRunTimeMs);
 	}
 
 	public GameTimer(Context context) {
@@ -41,7 +40,7 @@ public class GameTimer extends RelativeLayout {
 		this.context = context;
 
 		LayoutInflater.from(context).inflate(R.layout.game_timer, this);
-		timerProgress = (ProgressBar)findViewById(R.id.timerProgress);
+		timerProgress = findViewById(R.id.timerProgress);
 		timerProgress.setRotation(270);
 		timerProgress.setProgress(0);
 
@@ -64,7 +63,7 @@ public class GameTimer extends RelativeLayout {
 					@Override
 					public void run() {
 						double percentage = ((double)GameTimer.this.elapsedTimeMs / (double)GameTimer.this.startTimeMs) * 100.0;
-						Log.v(TAG, "onTick elapsedTimeMs: " + GameTimer.this.elapsedTimeMs + " startTimeMs: " + GameTimer.this.startTimeMs + " percentage: " + percentage);
+//						Log.v(TAG, "onTick elapsedTimeMs: " + GameTimer.this.elapsedTimeMs + " startTimeMs: " + GameTimer.this.startTimeMs + " percentage: " + percentage);
 						GameTimer.this.elapsedTimeMs += elapsedTimeMs;
 
 						if (timerCounter.isRunning()) {

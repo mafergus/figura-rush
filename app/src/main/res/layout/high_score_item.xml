@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:fontFamily="@font/josefinsansregular"
         android:textSize="18sp" />
 
     <TextView
@@ -17,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/label"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/josefinsansregular"
+        android:textSize="20sp" />
 
 </RelativeLayout>

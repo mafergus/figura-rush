@@ -1,7 +1,6 @@
 package com.phoenixunknownapps.figurarushextreme;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +28,9 @@ public class HighScoreItem extends RelativeLayout {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(context).inflate(R.layout.high_score_item, this);
-        rootView = (View) findViewById(R.id.rootView);
-        label = (TextView) findViewById(R.id.label);
-        score = (TextView) findViewById(R.id.score);
-
-        Typeface fontRegular = ((FiguraRushApplication) context.getApplicationContext()).getFontRegular();
-        label.setTypeface(fontRegular);
-        score.setTypeface(fontRegular);
+        rootView = findViewById(R.id.rootView);
+        label = findViewById(R.id.label);
+        score = findViewById(R.id.score);
     }
 
     public void setLabel(String txt) {
