@@ -93,7 +93,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:background="@drawable/button"
-        android:text="@string/high_scores"
+        android:text="@string/home"
         android:textSize="28sp" />
 
     <Button

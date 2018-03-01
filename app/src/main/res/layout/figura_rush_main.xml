@@ -1,80 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundColor">
 
-    <com.phoenixunknownapps.figurarushextreme.PracticeGame
-        android:id="@+id/practiceGame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible" />
+    <Button
+        android:id="@+id/questButton"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button"
+        android:text="@string/quests"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="467dp"
+        android:layout_height="117dp"
+        android:layout_below="@id/questButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/figura_rush_text" />
 
     <RelativeLayout
-        android:id="@+id/startOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
         android:layout_centerInParent="true"
-        android:background="@color/BackgroundColor"
-        android:gravity="center">
+        android:layout_marginTop="25dp">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="467dp"
-            android:layout_height="117dp"
-            android:layout_alignParentTop="true"
+        <Button
+            android:id="@+id/trainMagicStartButton"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button"
+            android:text="@string/play"
+            android:textSize="28sp" />
+
+        <Button
+            android:id="@+id/highScores"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/trainMagicStartButton"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button"
+            android:text="@string/high_scores"
+            android:textSize="28sp" />
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/highScores"
+            android:background="@drawable/button"
+            android:text="@string/share"
+            android:textSize="28sp" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/share"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/figura_rush_text" />
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-            <Button
-                android:id="@+id/trainMagicStartButton"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/button"
-                android:text="@string/play"
-                android:textSize="28sp" />
-
-            <Button
-                android:id="@+id/highScores"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:layout_below="@+id/trainMagicStartButton"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/button"
-                android:text="@string/high_scores"
-                android:textSize="28sp" />
-
-            <Button
-                android:id="@+id/share"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:layout_below="@+id/highScores"
-                android:background="@drawable/button"
-                android:text="@string/share"
-                android:textSize="28sp" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/share"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="30dp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/highScoreOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FiguraRushAS.iml" filepath="$PROJECT_DIR$/FiguraRushAS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FiguraRush.iml" filepath="$PROJECT_DIR$/FiguraRush.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.phoenixunknownapps.figurarushextreme.FiguraRushProgressBar
+    <com.addressunknowngames.shapeninja.FiguraRushProgressBar
         android:id="@+id/figuraRushProgressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,7 +42,7 @@
         android:textSize="40sp"
         android:visibility="invisible" />
 
-    <com.phoenixunknownapps.figurarushextreme.TimerCounterTextView
+    <com.addressunknowngames.shapeninja.TimerCounterTextView
         android:id="@+id/timerCounter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
