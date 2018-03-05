@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.addressunknowngames.shapeninja.R;
 
 
 public class TimerCounterTextView extends RelativeLayout {
@@ -23,8 +25,8 @@ public class TimerCounterTextView extends RelativeLayout {
 	private Callback callback;
 
 	public interface Callback {
-		public void onEnded(long totalRunTimeMs);
-		public void onTick(long timeElapsed);
+		void onEnded(long totalRunTimeMs);
+		void onTick(long timeElapsed);
 	}
 
 	public TimerCounterTextView(Context context) {
@@ -38,9 +40,9 @@ public class TimerCounterTextView extends RelativeLayout {
 	public TimerCounterTextView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		LayoutInflater.from(context).inflate(R.layout.timer_counter_text_view, this);
-		this.leftText = (TextView)findViewById(R.id.timerCounterTextViewLeft);
-		this.rightText = (TextView)findViewById(R.id.timerCounterTextViewRight);
-		this.point = (TextView)findViewById(R.id.timerCounterTextViewPoint);
+		this.leftText = findViewById(R.id.timerCounterTextViewLeft);
+		this.rightText = findViewById(R.id.timerCounterTextViewRight);
+		this.point = findViewById(R.id.timerCounterTextViewPoint);
 	}
 
 	private boolean initCalled = false;
@@ -50,25 +52,20 @@ public class TimerCounterTextView extends RelativeLayout {
 		initCalled = true;
 		setOnEndedCallback(callback);
 		this.timeToCountMs = startTimeMs;
-		timerCounter = new TimerCounter(intervalMs, new TimerCounter.TickCallback() {
-
-			@Override
-			public void onTick(long elapsedTimeMs) {
-				//				long elapsedTimeMs = elapsedTimeNs / 1000000;
-				timeLeftMs -= elapsedTimeMs;
-				totalRunTimeMs += elapsedTimeMs;
-				setTextColor(getContext().getResources().getColor((timeLeftMs < 4000 ? R.color.Red : R.color.black)));
-				if (timeLeftMs < 0) {
-					stop();
-					setTime(0);
-					setTextColor(getContext().getResources().getColor(R.color.black));
-					callback.onEnded(totalRunTimeMs);
-					return;
-				}
-				setTime(timeLeftMs);
-				if (callback != null) {
-					callback.onTick(elapsedTimeMs);
-				}
+		timerCounter = new TimerCounter(intervalMs, elapsedTimeMs -> {
+			timeLeftMs -= elapsedTimeMs;
+			totalRunTimeMs += elapsedTimeMs;
+			setTextColor(getContext().getResources().getColor((timeLeftMs < 4000 ? R.color.Red : R.color.black)));
+			if (timeLeftMs < 0) {
+				stop();
+				setTime(0);
+				setTextColor(getContext().getResources().getColor(R.color.black));
+				callback.onEnded(totalRunTimeMs);
+				return;
+			}
+			setTime(timeLeftMs);
+			if (callback != null) {
+				callback.onTick(elapsedTimeMs);
 			}
 		});
 		setTime(timeToCountMs);
@@ -116,7 +113,7 @@ public class TimerCounterTextView extends RelativeLayout {
 		leftText.setText("" + hoursStr + minutesStr + secondsStr);
 		rightText.setText("" + milisecondsStr);
 	}
-	
+
 	public long getTimeLeftMs() {
 		return timeLeftMs;
 	}

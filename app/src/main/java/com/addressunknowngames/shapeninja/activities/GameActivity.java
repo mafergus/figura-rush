@@ -16,8 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.addressunknowngames.shapeninja.GameWindow;
-import com.addressunknowngames.shapeninja.IGame;
+import com.addressunknowngames.shapeninja.game.GameWindow;
+import com.addressunknowngames.shapeninja.game.IGame;
 import com.addressunknowngames.shapeninja.R;
 import com.addressunknowngames.shapeninja.utils.Constants;
 

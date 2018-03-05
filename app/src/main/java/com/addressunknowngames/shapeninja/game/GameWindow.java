@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game;
 
 import android.content.Context;
 import android.gesture.Gesture;
@@ -21,6 +21,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.addressunknowngames.shapeninja.R;
+import com.addressunknowngames.shapeninja.game.levels.Level;
+import com.addressunknowngames.shapeninja.model.shapes.Circle;
+import com.addressunknowngames.shapeninja.model.shapes.Clover;
+import com.addressunknowngames.shapeninja.model.shapes.Heart;
+import com.addressunknowngames.shapeninja.model.shapes.Moon;
+import com.addressunknowngames.shapeninja.model.shapes.Shape;
+import com.addressunknowngames.shapeninja.model.shapes.Square;
+import com.addressunknowngames.shapeninja.model.shapes.Star;
+import com.addressunknowngames.shapeninja.model.shapes.Triangle;
+import com.addressunknowngames.shapeninja.ui.FiguraRushProgressBar;
+import com.addressunknowngames.shapeninja.ui.TimerCounterTextView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,15 +50,15 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
     protected static final int LEVEL_5 = 100;
     protected static final int LEVEL_6 = 9999;
 
-    static final public List<GestureType> ALL_SHAPES = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART, GestureType.STAR, GestureType.CLOVER);
-    final protected List<GestureType> level1Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE);
-    final protected List<GestureType> level2Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE);
-    final protected List<GestureType> level3Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON);
-    final protected List<GestureType> level4Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART);
-    final protected List<GestureType> level5Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART, GestureType.STAR);
-    final protected List<GestureType> level6Shapes = Arrays.asList(GestureType.CIRCLE, GestureType.TRIANGLE, GestureType.SQUARE, GestureType.MOON, GestureType.HEART, GestureType.STAR, GestureType.CLOVER);
+    static final public List<Shape> ALL_SHAPES = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star(), new Clover());
+    final protected List<Shape> level1Shapes = Arrays.asList(new Circle(), new Triangle());
+    final protected List<Shape> level2Shapes = Arrays.asList(new Circle(), new Triangle(), new Square());
+    final protected List<Shape> level3Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon());
+    final protected List<Shape> level4Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart());
+    final protected List<Shape> level5Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star());
+    final protected List<Shape> level6Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star(), new Clover());
 
-    protected List<Level> levels = new ArrayList<Level>();
+    protected List<Level> levels = new ArrayList<>();
     protected Level currentLevel;
 
     protected View rootView;
@@ -66,48 +79,9 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
     protected boolean isStarted = false;
     protected int score = 0;
     protected int streak = 0;
-    protected GestureType currentShape = GestureType.INVALID;
+    protected Shape currentShape = null;
 
     protected IGame.GameCallback gameCallback;
-
-    public enum GestureType {
-        INVALID("Invalid"),
-        TRIANGLE("Triangle"),
-        SQUARE("Square"),
-        CIRCLE("Circle"),
-        CLOVER("Clover"),
-        HEART("Heart"),
-        MOON("Moon"),
-        STAR("Star");
-
-        private String name;
-
-        GestureType(final String name) {
-            this.name = name;
-        }
-
-        public int getStringRes() {
-            switch (ordinal()) {
-                case 1:
-                    return R.string.triangle;
-                case 2:
-                    return R.string.square;
-                case 3:
-                    return R.string.circle;
-                case 4:
-                    return R.string.clover;
-                case 5:
-                    return R.string.heart;
-                case 6:
-                    return R.string.moon;
-                case 7:
-                    return R.string.star;
-                default:
-                    return R.string.invalid;
-            }
-        }
-    }
-
 
     public GameWindow(Context context) {
         this(context, null);
@@ -172,7 +146,7 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
     }
 
     protected int getLayoutResId() {
-        return R.layout.game;
+        return R.layout.basic_game;
     }
 
     protected void loadLevels() {
@@ -250,38 +224,6 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         timerCounterTextView.startAnimation(anim3);
     }
 
-    public void playExitAnim(AnimationListener listener) {
-        figuraRushProgressBar.animate().alpha(0f).setDuration(ANIMATION_DURATION);
-        Animation anim1 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
-        anim1.setDuration(ANIMATION_DURATION);
-        Animation anim2 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
-        anim2.setDuration(ANIMATION_DURATION);
-        anim2.setStartOffset(50);
-        Animation anim3 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
-        anim3.setDuration(ANIMATION_DURATION);
-        anim3.setStartOffset(100);
-        anim3.setAnimationListener(listener);
-
-        scoreContainer.startAnimation(anim1);
-        drawShapeText.startAnimation(anim2);
-        timerCounterTextView.startAnimation(anim3);
-//
-//        figuraRushProgressBar.animate().alpha(0f).setDuration(ANIMATION_DURATION);
-//        timerCounterTextView.animate().translationXBy(500f).setDuration(ANIMATION_DURATION);
-//        drawShapeText.animate().translationXBy(500f).setDuration(ANIMATION_DURATION).setStartDelay(50);
-//        scoreContainer.animate().translationXBy(500f).setDuration(ANIMATION_DURATION).setStartDelay(100).setListener(listener).withEndAction(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                figuraRushProgressBar.animate().alpha(1f);
-//                scoreContainer.animate().x(0f);
-//                timerCounterTextView.animate().x(0f);
-//                drawShapeText.animate().x(0f);
-//                scoreTv.animate().setListener(null);
-//            }
-//        });
-    }
-
     protected boolean didWinGame() {
         return false;
     }
@@ -329,10 +271,10 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         }
     }
 
-    private void gotShape(GestureType shape) {
-        Log.v("MNF", "gotShape " + shape.name());
+    private void gotShape(Shape shape) {
+        Log.v("MNF", "gotShape " + shape.getName());
         int color;
-        if (shape == currentShape) {
+        if (shape.getName().equals(currentShape.getName())) {
             color = getResources().getColor(R.color.green);
             correctShape();
         } else {
@@ -350,12 +292,10 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         fadeOut.setDuration(ANIM_FADE_OUT_MS_200);
         fadeOut.setAnimationListener(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation arg0) {
-            }
+            public void onAnimationStart(Animation arg0) {}
 
             @Override
-            public void onAnimationRepeat(Animation arg0) {
-            }
+            public void onAnimationRepeat(Animation arg0) {}
 
             @Override
             public void onAnimationEnd(Animation arg0) {
@@ -395,19 +335,17 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         } else if (timeBonus > 1000) {
             modifierText = getContext().getString(R.string.streak);
         }
-        timeBonusText.setText(modifierText + " " + "+" + (float) ((float) timeBonus / 1000f));
+        timeBonusText.setText(modifierText + " " + "+" + ((float) timeBonus / 1000f));
         timeBonusText.setVisibility(View.VISIBLE);
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
         fadeOut.setDuration(ANIM_FADE_OUT_MS_600);
         fadeOut.setAnimationListener(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation arg0) {
-            }
+            public void onAnimationStart(Animation arg0) {}
 
             @Override
-            public void onAnimationRepeat(Animation arg0) {
-            }
+            public void onAnimationRepeat(Animation arg0) {}
 
             @Override
             public void onAnimationEnd(Animation arg0) {
@@ -420,19 +358,15 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
     protected void nextShape() {
         Log.v("MNF", "nextShape");
         currentShape = currentLevel.getShape();
-        drawShapeText.setText(getContext().getString(currentShape.getStringRes()));
+        drawShapeText.setText(getContext().getString(currentShape.getStringResId()));
     }
 
     protected void incrementScore() {
         Log.v("MNF", "incrementScore");
         score++;
-        scoreTv.animate().alpha(0f).setDuration(100).withEndAction(new Runnable() {
-
-            @Override
-            public void run() {
-                scoreTv.setText("" + score);
-                scoreTv.animate().alpha(1f).setDuration(100);
-            }
+        scoreTv.animate().alpha(0f).setDuration(100).withEndAction(() -> {
+            scoreTv.setText("" + score);
+            scoreTv.animate().alpha(1f).setDuration(100);
         });
     }
 
@@ -445,27 +379,26 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
 
         ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
         Prediction bestPrediction = predictions.get(0);
-        GestureType gestureEnum;
+        Shape shape;
         if (bestPrediction.score > 1) {
             if (bestPrediction.name.startsWith("triangle")) {
-                gestureEnum = GestureType.TRIANGLE;
+                shape = new Triangle();
             } else if (bestPrediction.name.startsWith("circle")) {
-                gestureEnum = GestureType.CIRCLE;
+                shape = new Circle();
             } else if (bestPrediction.name.startsWith("square")) {
-                gestureEnum = GestureType.SQUARE;
+                shape = new Square();
             } else if (bestPrediction.name.startsWith("clover")) {
-                gestureEnum = GestureType.CLOVER;
+                shape = new Clover();
             } else if (bestPrediction.name.startsWith("heart")) {
-                gestureEnum = GestureType.HEART;
+                shape = new Heart();
             } else if (bestPrediction.name.startsWith("moon")) {
-                gestureEnum = GestureType.MOON;
+                shape = new Moon();
             } else if (bestPrediction.name.startsWith("star")) {
-                gestureEnum = GestureType.STAR;
+                shape = new Star();
             } else {
-                gestureEnum = GestureType.INVALID;
+                shape = null;
             }
-            gotShape(gestureEnum);
-            //			Toast.makeText(this, gestureEnum.getName(), Toast.LENGTH_SHORT).show();
+            gotShape(shape);
         }
     }
 

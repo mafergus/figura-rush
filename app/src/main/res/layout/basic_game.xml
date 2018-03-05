@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.addressunknowngames.shapeninja.FiguraRushProgressBar
+    <com.addressunknowngames.shapeninja.ui.FiguraRushProgressBar
         android:id="@+id/figuraRushProgressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,7 +43,7 @@
         android:textSize="40sp"
         android:visibility="invisible" />
 
-    <com.addressunknowngames.shapeninja.TimerCounterTextView
+    <com.addressunknowngames.shapeninja.ui.TimerCounterTextView
         android:id="@+id/timerCounter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

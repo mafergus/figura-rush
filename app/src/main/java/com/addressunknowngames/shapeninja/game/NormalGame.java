@@ -1,7 +1,9 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.addressunknowngames.shapeninja.R;
 
 /**
  * Created by matthewferguson on 10/26/15.
@@ -23,7 +25,7 @@ public class NormalGame extends GameWindow {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.game;
+        return R.layout.asdgame;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game;
 
 import android.content.Context;
 import android.os.Handler;
@@ -8,6 +8,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.addressunknowngames.shapeninja.R;
+import com.addressunknowngames.shapeninja.ui.TimerCounter;
 
 public class GameTimer extends RelativeLayout {
 	final private static String TAG = GameTimer.class.getCanonicalName();

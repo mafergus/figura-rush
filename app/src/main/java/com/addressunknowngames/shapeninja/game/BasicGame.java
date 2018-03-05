@@ -1,7 +1,9 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.addressunknowngames.shapeninja.R;
 
 /**
  * Created by matthewferguson on 10/21/15.

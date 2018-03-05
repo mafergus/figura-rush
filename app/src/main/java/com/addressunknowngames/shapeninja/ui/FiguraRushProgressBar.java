@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.addressunknowngames.shapeninja.R;
 
 public class FiguraRushProgressBar extends RelativeLayout {
 	final private Context context;

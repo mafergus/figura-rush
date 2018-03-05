@@ -1,8 +1,10 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+
+import com.addressunknowngames.shapeninja.R;
 
 import java.text.DecimalFormat;
 

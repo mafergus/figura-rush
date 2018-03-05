@@ -1,6 +1,6 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.game.levels;
 
-import com.addressunknowngames.shapeninja.GameWindow.GestureType;
+import com.addressunknowngames.shapeninja.model.shapes.Shape;
 
 import java.util.List;
 import java.util.Random;
@@ -8,24 +8,24 @@ import java.util.Random;
 public class Level {
 	final int color;
 	final int points;
-	final List<GestureType> shapes;
+	final List<Shape> shapes;
 	
 	private Random randomGenerator;
 	
-	public Level(int color, int points, final List<GestureType> shapes) {
+	public Level(int color, int points, final List<Shape> shapes) {
 		this.color = color;
 		this.points = points;
 		this.shapes = shapes;
 		randomGenerator = new Random();
 	}
 	
-	private GestureType getRandomShape(final List<GestureType> shapes) {
+	private Shape getRandomShape(final List<Shape> shapes) {
 		int index = randomGenerator.nextInt(shapes.size());
 		return shapes.get(index);
 	}
 	
 	public int getColor() { return color; }
-	public GestureType getShape() { return getRandomShape(shapes); }
+	public Shape getShape() { return getRandomShape(shapes); }
 	public int getPoints() { return points; }
 
 	@Override

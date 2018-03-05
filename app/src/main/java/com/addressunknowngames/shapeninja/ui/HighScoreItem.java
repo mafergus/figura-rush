@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.addressunknowngames.shapeninja.R;
 
 /**
  * Created by matthewferguson on 10/22/15.

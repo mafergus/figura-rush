@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,15 +6,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.addressunknowngames.shapeninja.GameWindow.GestureType;
+import com.addressunknowngames.shapeninja.R;
+import com.addressunknowngames.shapeninja.game.GameWindow;
+import com.addressunknowngames.shapeninja.model.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class SelectShapePopupWindow extends PopupWindow {
 	private ItemSelectedCallback callback;
 
 	public interface ItemSelectedCallback {
-		public void onItemSelected(final GestureType shape);
+		void onItemSelected(final Shape shape);
 	}
 
 	public SelectShapePopupWindow(final Context context, final ItemSelectedCallback callback) {
@@ -36,18 +36,13 @@ public class SelectShapePopupWindow extends PopupWindow {
 		this.callback = callback;
 
 		View view = LayoutInflater.from(context).inflate(R.layout.select_shape_popup, null, false);
-		list = (ListView)view.findViewById(R.id.selecShapeListView);
+		list = view.findViewById(R.id.selecShapeListView);
 		adapter = new SelectShapeListAdapter(context);
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (callback != null) {
-					callback.onItemSelected((GestureType)adapter.getItem(position));
-					dismiss();
-				}
+		list.setOnItemClickListener((parent, v, position, id) -> {
+			if (callback != null) {
+				callback.onItemSelected(adapter.getItem(position));
+				dismiss();
 			}
 		});
 
@@ -64,11 +59,10 @@ public class SelectShapePopupWindow extends PopupWindow {
 
 	private class SelectShapeListAdapter extends BaseAdapter {
 		final Context context;
-		private List<GestureType> values = new ArrayList<GestureType>(GameWindow.ALL_SHAPES);
+		private List<Shape> values = new ArrayList<>(GameWindow.ALL_SHAPES);
 
 		public SelectShapeListAdapter(Context context) {
 			this.context = context;
-			values.add(GestureType.INVALID);
 		}
 
 		@Override
@@ -77,7 +71,7 @@ public class SelectShapePopupWindow extends PopupWindow {
 		}
 
 		@Override
-		public Object getItem(int position) {
+		public Shape getItem(int position) {
 			return values.get(position);
 		}
 
@@ -91,14 +85,14 @@ public class SelectShapePopupWindow extends PopupWindow {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(context).inflate(R.layout.select_shape_list_item, null);
 			}
-			TextView text = (TextView)convertView.findViewById(R.id.selectShapeListItemText);
+			TextView text = convertView.findViewById(R.id.selectShapeListItemText);
 			text.setTypeface(fontRegular);
 
-			GestureType shape = values.get(position);
-			if (shape == GestureType.INVALID) {
-				text.setText(context.getString(R.string.random));				
+			Shape shape = values.get(position);
+			if (shape == null) {
+				text.setText(context.getString(R.string.random));
 			} else {
-				text.setText(context.getString(shape.getStringRes()));
+				text.setText(context.getString(shape.getStringResId()));
 			}
 
 			return convertView;

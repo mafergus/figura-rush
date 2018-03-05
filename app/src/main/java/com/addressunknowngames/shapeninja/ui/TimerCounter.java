@@ -1,4 +1,4 @@
-package com.addressunknowngames.shapeninja;
+package com.addressunknowngames.shapeninja.ui;
 
 import android.os.Handler;
 import android.os.Looper;
