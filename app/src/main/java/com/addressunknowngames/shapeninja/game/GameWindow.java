@@ -7,19 +7,10 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.addressunknowngames.shapeninja.R;
 import com.addressunknowngames.shapeninja.game.levels.Level;
@@ -31,18 +22,14 @@ import com.addressunknowngames.shapeninja.model.shapes.Shape;
 import com.addressunknowngames.shapeninja.model.shapes.Square;
 import com.addressunknowngames.shapeninja.model.shapes.Star;
 import com.addressunknowngames.shapeninja.model.shapes.Triangle;
-import com.addressunknowngames.shapeninja.ui.FiguraRushProgressBar;
+import com.addressunknowngames.shapeninja.ui.GameDisplay;
 import com.addressunknowngames.shapeninja.ui.TimerCounterTextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GameWindow extends RelativeLayout implements IGame, OnGesturePerformedListener {
-    protected static final int ANIMATION_DURATION = 300;
-    protected static final int START_TIME_MS = 10000;
-    protected static final int ANIM_FADE_OUT_MS_200 = 200;
-    protected static final int ANIM_FADE_OUT_MS_600 = 600;
+public class GameWindow extends RelativeLayout implements OnGesturePerformedListener {
     protected static final int LEVEL_1 = 5;
     protected static final int LEVEL_2 = 15;
     protected static final int LEVEL_3 = 35;
@@ -61,27 +48,16 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
     protected List<Level> levels = new ArrayList<>();
     protected Level currentLevel;
 
-    protected View rootView;
-    protected ImageView background;
+    protected GameDisplay gameDisplay;
     protected GestureLibrary gestureLib;
     protected GestureOverlayView gestureOverlayView;
-    protected TimerCounterTextView timerCounterTextView;
-    protected RelativeLayout scoreContainer;
-    protected TextView drawShapeText;
-    protected TextView scoreLabelTv;
-    protected TextView scoreTv;
-    protected TextView targetScoreTv;
-    protected TextView timeBonusText;
-    protected Typeface fontBold;
-    protected Typeface fontRegular;
-    protected FiguraRushProgressBar figuraRushProgressBar;
 
     protected boolean isStarted = false;
     protected int score = 0;
     protected int streak = 0;
     protected Shape currentShape = null;
 
-    protected IGame.GameCallback gameCallback;
+    protected GameCallback gameCallback;
 
     public GameWindow(Context context) {
         this(context, null);
@@ -96,57 +72,20 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
 
         LayoutInflater.from(context).inflate(getLayoutResId(), this);
 
-        fontBold = Typeface.createFromAsset(context.getAssets(), "josefinsans_bold.ttf");
-        fontRegular = Typeface.createFromAsset(context.getAssets(), "josefinsans_regular.ttf");
-
-        rootView = findViewById(R.id.rootView);
-        gestureOverlayView = findViewById(R.id.gestureOverlay);
+        gameDisplay = findViewById(R.id.gameDisplay);
+        gestureOverlayView = gameDisplay.findViewById(R.id.gestureOverlay);
         gestureOverlayView.addOnGesturePerformedListener(this);
         gestureLib = GestureLibraries.fromRawResource(context, R.raw.gestures);
         if (!gestureLib.load()) {
             //			finish();
         }
 
-        scoreLabelTv = findViewById(R.id.trainMagicScoreLabel);
-        scoreLabelTv.setTypeface(fontRegular);
-        scoreTv = findViewById(R.id.trainMagicScore);
-        scoreTv.setTypeface(fontRegular);
-        targetScoreTv = findViewById(R.id.targetScore);
-        targetScoreTv.setTypeface(fontRegular);
-        TextView slash = findViewById(R.id.slash);
-        slash.setTypeface(fontRegular);
-        drawShapeText = findViewById(R.id.trainMagicShapeText);
-        drawShapeText.setTypeface(fontRegular);
-        background = findViewById(R.id.trainMagicBackground);
-
-        timerCounterTextView = findViewById(R.id.timerCounter);
-        timerCounterTextView.init(50, START_TIME_MS, new TimerCounterTextView.Callback() {
-
-            @Override
-            public void onEnded(long totalRunTimeMs) {
-                endGame(totalRunTimeMs);
-            }
-
-            @Override
-            public void onTick(long timeElapsed) {
-                onTimerTick(timeElapsed);
-            }
-        });
-        timerCounterTextView.setTypeface(fontBold);
-        timerCounterTextView.setTextSize(48f);
-        timeBonusText = findViewById(R.id.timeBonusText);
-        timeBonusText.setTypeface(fontBold);
-        scoreContainer = findViewById(R.id.trainMagicScoreContainer);
-        figuraRushProgressBar = findViewById(R.id.figuraRushProgressBar);
-        figuraRushProgressBar.setProgress(100);
-
         loadLevels();
         currentLevel = levels.get(0);
-        rootView.setBackgroundColor(getResources().getColor(R.color.BlanchedAlmond));
     }
 
     protected int getLayoutResId() {
-        return R.layout.basic_game;
+        return R.layout.game_window;
     }
 
     protected void loadLevels() {
@@ -166,62 +105,28 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
             if (nextLevel != null) {
                 currentLevel = nextLevel;
             }
-            rootView.setBackgroundColor(currentLevel.getColor());
+            gameDisplay.setBackgroundColor(currentLevel.getColor());
         }
     }
 
     public void startGame(final int level) {
         Log.v("MNF", "startGame level: " + level);
-        gameStartAnim(new AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
+
+        streak = 0;
+        score = 0;
+        currentLevel = levels.get(0);
+        gameDisplay.start(new TimerCounterTextView.Callback() {
 
             @Override
-            public void onAnimationEnd(Animation animation) {
-                doGameStart(level);
+            public void onEnded(long totalRunTimeMs) {
+                endGame(totalRunTimeMs);
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onTick(long timeElapsed) {}
         });
-    }
-
-    protected void doGameStart(int level) {
-        streak = 0;
-        score = 0;
-        scoreTv.setText("" + 0);
-        currentLevel = levels.get(0);
-        rootView.setBackgroundColor(currentLevel.getColor());
-        timerCounterTextView.start();
-
         isStarted = true;
         nextShape();
-    }
-
-    protected void onTimerTick(long timeElapsed) {
-        figuraRushProgressBar.setProgress(timerCounterTextView.getTimeLeftMs() / 100.0);
-    }
-
-    private void gameStartAnim(AnimationListener listener) {
-
-        figuraRushProgressBar.animate().alpha(0f);
-        figuraRushProgressBar.animate().alpha(1f).setDuration(ANIMATION_DURATION);
-
-        Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        Animation anim1 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim1.setDuration(ANIMATION_DURATION);
-        Animation anim2 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim2.setDuration(ANIMATION_DURATION);
-        anim2.setStartOffset(50);
-        Animation anim3 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim3.setDuration(ANIMATION_DURATION);
-        anim3.setStartOffset(100);
-        anim3.setAnimationListener(listener);
-
-        figuraRushProgressBar.startAnimation(fadeIn);
-        scoreContainer.startAnimation(anim1);
-        drawShapeText.startAnimation(anim2);
-        timerCounterTextView.startAnimation(anim3);
     }
 
     protected boolean didWinGame() {
@@ -230,7 +135,6 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
 
     protected void gameWon(long totalRunTimeMs) {
         Log.v("MNF", "gameWon runTime: " + totalRunTimeMs);
-        timerCounterTextView.stop();
         reset();
         if (gameCallback != null) {
             gameCallback.onGameWon(totalRunTimeMs, score);
@@ -247,12 +151,8 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
 
     public void reset() {
         Log.v("MNF", "reset");
-        timerCounterTextView.reset();
-        figuraRushProgressBar.setProgress(100.0);
         isStarted = false;
-        timeBonusText.setVisibility(View.INVISIBLE);
-        scoreTv.setText("0");
-        drawShapeText.setText("");
+        gameDisplay.reset(currentLevel.getColor());
     }
 
     protected float getTimeModifier() {
@@ -273,36 +173,14 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
 
     private void gotShape(Shape shape) {
         Log.v("MNF", "gotShape " + shape.getName());
-        int color;
         if (shape.getName().equals(currentShape.getName())) {
-            color = getResources().getColor(R.color.green);
+            gameDisplay.showShapeAnimation(getResources().getColor(R.color.green));
             correctShape();
         } else {
-            color = getResources().getColor(R.color.red);
+            gameDisplay.showShapeAnimation(getResources().getColor(R.color.red));
             incorrectShape();
         }
-        showShapeAnimation(color);
-    }
 
-    private void showShapeAnimation(int color) {
-        background.setVisibility(View.VISIBLE);
-        background.setBackgroundColor(color);
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(ANIM_FADE_OUT_MS_200);
-        fadeOut.setAnimationListener(new AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation arg0) {}
-
-            @Override
-            public void onAnimationRepeat(Animation arg0) {}
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                background.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            }
-        });
-        background.setAnimation(fadeOut);
     }
 
     protected void incorrectShape() {
@@ -318,56 +196,25 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         }
         streak++;
         long timeBonus = (long) (getTimeModifier() * 1000);
-        showCorrectAnimation(timeBonus);
-        timerCounterTextView.addTime(timeBonus);
+        gameDisplay.showCorrectAnimation(timeBonus);
+        gameDisplay.addTime(timeBonus);
 
         if (didWinGame()) {
-            gameWon(timerCounterTextView.getTotalRunTimeMs());
+            gameWon(gameDisplay.getRunTime());
         } else {
             nextShape();
         }
     }
 
-    private void showCorrectAnimation(long timeBonus) {
-        String modifierText = "";
-        if (timeBonus >= 2000) {
-            modifierText = getContext().getString(R.string.streak_2);
-        } else if (timeBonus > 1000) {
-            modifierText = getContext().getString(R.string.streak);
-        }
-        timeBonusText.setText(modifierText + " " + "+" + ((float) timeBonus / 1000f));
-        timeBonusText.setVisibility(View.VISIBLE);
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(ANIM_FADE_OUT_MS_600);
-        fadeOut.setAnimationListener(new AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation arg0) {}
-
-            @Override
-            public void onAnimationRepeat(Animation arg0) {}
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                timeBonusText.setVisibility(View.INVISIBLE);
-            }
-        });
-        timeBonusText.setAnimation(fadeOut);
-    }
-
     protected void nextShape() {
         Log.v("MNF", "nextShape");
         currentShape = currentLevel.getShape();
-        drawShapeText.setText(getContext().getString(currentShape.getStringResId()));
+        gameDisplay.setShape(currentShape);
     }
 
     protected void incrementScore() {
         Log.v("MNF", "incrementScore");
-        score++;
-        scoreTv.animate().alpha(0f).setDuration(100).withEndAction(() -> {
-            scoreTv.setText("" + score);
-            scoreTv.animate().alpha(1f).setDuration(100);
-        });
+        gameDisplay.setScore(++score);
     }
 
     @Override
@@ -402,7 +249,7 @@ public class GameWindow extends RelativeLayout implements IGame, OnGesturePerfor
         }
     }
 
-    public void setGameCallback(final IGame.GameCallback callback) {
+    public void setGameCallback(final GameCallback callback) {
         this.gameCallback = callback;
     }
 

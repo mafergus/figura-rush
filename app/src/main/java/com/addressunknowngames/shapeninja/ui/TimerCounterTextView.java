@@ -47,12 +47,19 @@ public class TimerCounterTextView extends RelativeLayout {
 
 	private boolean initCalled = false;
 
-	public void init(long intervalMs, long startTimeMs, final Callback callback) {
+	public void init(long intervalMs, long startTimeMs) {
 		assert(!initCalled);
 		initCalled = true;
-		setOnEndedCallback(callback);
 		this.timeToCountMs = startTimeMs;
-		timerCounter = new TimerCounter(intervalMs, elapsedTimeMs -> {
+		timerCounter = new TimerCounter(intervalMs);
+		setTime(timeToCountMs);
+	}
+
+	public void start(Callback callback) {
+	    this.callback = callback;
+		setTime(timeToCountMs);
+		timeLeftMs = timeToCountMs;
+		timerCounter.start(elapsedTimeMs -> {
 			timeLeftMs -= elapsedTimeMs;
 			totalRunTimeMs += elapsedTimeMs;
 			setTextColor(getContext().getResources().getColor((timeLeftMs < 4000 ? R.color.Red : R.color.black)));
@@ -60,25 +67,14 @@ public class TimerCounterTextView extends RelativeLayout {
 				stop();
 				setTime(0);
 				setTextColor(getContext().getResources().getColor(R.color.black));
-				callback.onEnded(totalRunTimeMs);
+				this.callback.onEnded(totalRunTimeMs);
 				return;
 			}
 			setTime(timeLeftMs);
-			if (callback != null) {
-				callback.onTick(elapsedTimeMs);
+			if (this.callback != null) {
+				this.callback.onTick(elapsedTimeMs);
 			}
 		});
-		setTime(timeToCountMs);
-	}
-
-	public void setOnEndedCallback(final Callback callback) {
-		this.callback = callback;
-	}
-
-	public void start() {
-		setTime(timeToCountMs);
-		timeLeftMs = timeToCountMs;
-		timerCounter.start();
 	}
 
 	public void stop() {

@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 public class TimerCounter {
-	private float startTime;
 	private float lastUpdateTime;
 	
 	private long intervalMs;
@@ -16,7 +15,7 @@ public class TimerCounter {
 	private boolean isRunning = false;
 	
 	public interface TickCallback {
-		public void onTick(long elapsedTimeMs);
+		void onTick(long elapsedTimeMs);
 	}
 
 	private class TimerRunnable implements Runnable {
@@ -36,15 +35,11 @@ public class TimerCounter {
 	}
 	
 	public TimerCounter(long intervalMs) {
-		this(intervalMs, null);
-	}
-	
-	public TimerCounter(long intervalMs, final TickCallback tickCallback) {
 		this.intervalMs = intervalMs;
-		this.tickCallback = tickCallback;
 	}
 	
-	public void start() {
+	public void start(TickCallback callback) {
+		this.tickCallback = callback;
 		isRunning = true;
 		lastUpdateTime = System.nanoTime();
 		h.postDelayed(runnable, intervalMs);

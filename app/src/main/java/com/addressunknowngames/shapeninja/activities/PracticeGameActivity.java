@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.addressunknowngames.shapeninja.game.GameWindow;
-import com.addressunknowngames.shapeninja.game.IGame;
 import com.addressunknowngames.shapeninja.R;
+import com.addressunknowngames.shapeninja.game.GameCallback;
+import com.addressunknowngames.shapeninja.game.GameWindow;
 
 /**
  * Created by matthewferguson on 3/4/18.
@@ -19,7 +19,7 @@ public class PracticeGameActivity extends Activity {
 
     private GameWindow gameWindow;
 
-    private IGame.GameCallback gameCallback = new IGame.GameCallback() {
+    private GameCallback gameCallback = new GameCallback() {
 
         @Override
         public void onGameEnd(final long timeMs, final int score) {

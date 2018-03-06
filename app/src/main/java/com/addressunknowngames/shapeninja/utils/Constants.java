@@ -8,4 +8,6 @@ public class Constants {
     public static final String GAME_SCORE_KEY = "game_score";
     public static final String GAME_TIME_KEY = "game_time";
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.addressunknowngames.shapeninja";
+    public static final int START_TIME_MS = 10000;
+    public static final int TIME_INTERVAL = 50;
 }

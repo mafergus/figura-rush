@@ -5,16 +5,9 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/trainMagicBackground"
+        android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <com.addressunknowngames.shapeninja.ui.FiguraRushProgressBar
-        android:id="@+id/figuraRushProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
 
     <ImageView
         android:id="@+id/shapeImage"
@@ -24,7 +17,7 @@
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/trainMagicShapeText"
+        android:id="@+id/shapeText"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_centerInParent="true"
@@ -35,9 +28,9 @@
         android:id="@+id/timeBonusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
         android:textColor="@color/DarkGreen"
         android:textSize="40sp"
         android:visibility="invisible" />
@@ -50,7 +43,7 @@
         android:layout_marginBottom="100dp" />
 
     <TextView
-        android:id="@+id/trainMagicScoreLabel"
+        android:id="@+id/scoreLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -61,19 +54,16 @@
         android:textSize="34sp" />
 
     <RelativeLayout
-        android:id="@+id/trainMagicScoreContainer"
-        android:layout_width="match_parent"
+        android:id="@+id/scoreContainer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/trainMagicScoreLabel"
+        android:layout_below="@+id/scoreLabel"
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:id="@+id/trainMagicScore"
+            android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/slash"
             android:textSize="102sp" />
 
         <TextView
@@ -83,7 +73,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="/"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/targetScore"
@@ -91,7 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/slash"
-            android:textSize="102sp" />
+            android:textSize="102sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.gesture.GestureOverlayView

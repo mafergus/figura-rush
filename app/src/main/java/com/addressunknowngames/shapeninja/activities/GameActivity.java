@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.addressunknowngames.shapeninja.R;
+import com.addressunknowngames.shapeninja.game.GameCallback;
+import com.addressunknowngames.shapeninja.game.GameWindow;
+import com.addressunknowngames.shapeninja.utils.Constants;
 import com.addressunknowngames.shapeninja.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,10 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.addressunknowngames.shapeninja.game.GameWindow;
-import com.addressunknowngames.shapeninja.game.IGame;
-import com.addressunknowngames.shapeninja.R;
-import com.addressunknowngames.shapeninja.utils.Constants;
 
 /**
  * Created by matthewferguson on 2/26/18.
@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
 
     private GameWindow gameWindow;
 
-    private IGame.GameCallback gameCallback = new IGame.GameCallback() {
+    private GameCallback gameCallback = new GameCallback() {
 
         @Override
         public void onGameEnd(final long timeMs, final int score) {
@@ -45,14 +45,6 @@ public class GameActivity extends Activity {
         @Override
         public void onGameWon(long timeMs, int score) {
             Log.v("MNF", "onGameWon score: " + score);
-//            SharedPreferences prefs = getSharedPreferences(getPackageName() + "prefs", Context.MODE_PRIVATE);
-//            int level = prefs.getInt("level", 1);
-//            SharedPreferences.Editor editor = prefs.edit();
-//            editor.putInt("level", level + 1);
-//            editor.commit();
-//
-//            onGameEnd(timeMs, score);
-//            gameEndedText.setText(GameOverActivity.this.getString(R.string.level_passed, level));
         }
     };
 
