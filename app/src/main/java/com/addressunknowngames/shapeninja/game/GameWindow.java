@@ -30,20 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameWindow extends RelativeLayout implements OnGesturePerformedListener {
-    protected static final int LEVEL_1 = 5;
-    protected static final int LEVEL_2 = 15;
-    protected static final int LEVEL_3 = 35;
-    protected static final int LEVEL_4 = 60;
-    protected static final int LEVEL_5 = 100;
-    protected static final int LEVEL_6 = 9999;
 
     static final public List<Shape> ALL_SHAPES = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star(), new Clover());
-    final protected List<Shape> level1Shapes = Arrays.asList(new Circle(), new Triangle());
-    final protected List<Shape> level2Shapes = Arrays.asList(new Circle(), new Triangle(), new Square());
-    final protected List<Shape> level3Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon());
-    final protected List<Shape> level4Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart());
-    final protected List<Shape> level5Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star());
-    final protected List<Shape> level6Shapes = Arrays.asList(new Circle(), new Triangle(), new Square(), new Moon(), new Heart(), new Star(), new Clover());
 
     protected List<Level> levels = new ArrayList<>();
     protected Level currentLevel;
@@ -80,21 +68,12 @@ public class GameWindow extends RelativeLayout implements OnGesturePerformedList
             //			finish();
         }
 
-        loadLevels();
+        levels.addAll(Level.allLevels(getContext()));
         currentLevel = levels.get(0);
     }
 
     protected int getLayoutResId() {
         return R.layout.game_window;
-    }
-
-    protected void loadLevels() {
-        levels.add(new Level(getContext().getResources().getColor(R.color.BlanchedAlmond), LEVEL_1, level1Shapes));
-        levels.add(new Level(getContext().getResources().getColor(R.color.Lavender), LEVEL_2, level2Shapes));
-        levels.add(new Level(getContext().getResources().getColor(R.color.Olive), LEVEL_3, level3Shapes));
-        levels.add(new Level(getContext().getResources().getColor(R.color.Ivory), LEVEL_4, level4Shapes));
-        levels.add(new Level(getContext().getResources().getColor(R.color.Bisque), LEVEL_5, level5Shapes));
-        levels.add(new Level(getContext().getResources().getColor(R.color.Gold), LEVEL_6, level6Shapes));
     }
 
     protected void updateLevel() {

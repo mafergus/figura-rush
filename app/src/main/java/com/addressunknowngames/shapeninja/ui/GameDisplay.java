@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,7 +21,6 @@ import com.addressunknowngames.shapeninja.utils.Constants;
  */
 
 public class GameDisplay extends RelativeLayout {
-    protected static final int ANIMATION_DURATION = 300;
     protected static final int ANIM_FADE_OUT_MS_200 = 200;
     protected static final int ANIM_FADE_OUT_MS_600 = 600;
 
@@ -77,36 +75,9 @@ public class GameDisplay extends RelativeLayout {
         setBackgroundColor(colorResId);
     }
 
-    public void startTimer(TimerCounterTextView.Callback callback) {
+    public void start(TimerCounterTextView.Callback callback) {
         timerCounterTextView.init(Constants.TIME_INTERVAL, Constants.START_TIME_MS);
         timerCounterTextView.start(callback);
-    }
-
-    public void start(TimerCounterTextView.Callback callback) {
-        Animation anim1 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim1.setDuration(ANIMATION_DURATION);
-        Animation anim2 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim2.setDuration(ANIMATION_DURATION);
-        anim2.setStartOffset(50);
-        Animation anim3 = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left);
-        anim3.setDuration(ANIMATION_DURATION);
-        anim3.setStartOffset(100);
-        anim3.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                startTimer(callback);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-
-        scoreContainer.startAnimation(anim1);
-        drawShapeText.startAnimation(anim2);
-        timerCounterTextView.startAnimation(anim3);
     }
 
     public void stop() { timerCounterTextView.stop(); }
